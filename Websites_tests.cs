@@ -148,7 +148,7 @@ public class Tests
 
     //Dynamic Loading
     [Test]
-    public void DynamicLoading()
+    public void DynamicLoading1()
     {
         driver.Navigate().GoToUrl(BaseUrl + "dynamic_loading/1");
         
@@ -160,6 +160,27 @@ public class Tests
 
         WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
         wait.Until(d => d.FindElement(By.Id("finish")).Displayed);
+
+        Assert.That(message.Text, Is.EqualTo("Hello World!"));
+    }
+
+    [Test]
+    public void DynamicLoading2()
+    {
+        driver.Navigate().GoToUrl(BaseUrl + "dynamic_loading/2");
+
+        var start_button=driver.FindElement(By.CssSelector("#start button"));
+        start_button.Click();
+
+        WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+        var message = wait.Until(d =>
+        {
+            var element = d.FindElement(By.Id("finish"));
+            if (element.Displayed)
+            return element;
+            
+            return null;
+        });
 
         Assert.That(message.Text, Is.EqualTo("Hello World!"));
     }
